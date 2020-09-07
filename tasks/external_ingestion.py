@@ -2,38 +2,28 @@
 
 import datetime
 import json
-import os
 
 import requests
-from pydal import DAL, Field
+from modules.current import Current
 
 
 class ExternalIngestion(object):
     def __init__(self):
-        self.db = DAL(
-            "sqlite://../database/storage.sqlite",
-            folder=os.path.join(os.path.dirname(__file__), "..", "database"),
-        )
-
-        self.db.define_table(
-            "nba_events",
-            Field("event_datetime", type="datetime"),
-            Field("event_home_team", length=64),
-            Field("event_away_team", length=64),
-        )
-
         self.event_id = 4387
-        self.api = "https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id={}".format(
-            self.event_id
-        )
 
     def load_events(self):
-        db = self.db
+        db = Current().db
 
-        api_response = requests.get(self.api)
+        api_response = requests.get(
+            "https://www.thesportsdb.com/api/v1/json/1/eventsnextleague.php?id={}".format(
+                self.event_id
+            )
+        )
 
         if api_response.status_code == 200:
             events = json.loads(api_response.content)["events"]
+
+            db.nba_events.truncate()
 
             for each in events:
                 db.nba_events.insert(
