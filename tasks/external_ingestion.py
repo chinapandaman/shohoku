@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-
 import datetime
 import json
+import os
 
 import requests
 from pydal import DAL, Field
@@ -10,7 +10,10 @@ from pydal import DAL, Field
 
 class ExternalIngestion(object):
     def __init__(self):
-        self.db = DAL("sqlite:memory")
+        self.db = DAL(
+            "sqlite://../database/storage.sqlite",
+            folder=os.path.join(os.path.dirname(__file__), "..", "database"),
+        )
 
         self.db.define_table(
             "nba_events",
