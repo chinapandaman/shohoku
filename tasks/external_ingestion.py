@@ -17,9 +17,13 @@ class ExternalIngestion(object):
 
         self.db.define_table(
             "nba_events",
+            Field("event_id", length=32),
+            Field("event_title", length=512),
+            Field("event_subtitle", length=512),
             Field("event_datetime", type="datetime"),
             Field("event_home_team", length=64),
             Field("event_away_team", length=64),
+            Field("event_thumb", type="text"),
         )
 
         self.event_id = 4387
@@ -41,12 +45,18 @@ class ExternalIngestion(object):
             for each in events:
                 db.nba_events.insert(
                     **{
+                        "event_id": each["idEvent"],
+                        "event_title": each["strEventAlternate"],
+                        "event_subtitle": "{} {}".format(
+                            each["strLeague"], each["strSeason"]
+                        ),
                         "event_datetime": datetime.datetime.strptime(
                             "{} {}".format(each["dateEvent"], each["strTime"]),
                             "%Y-%m-%d %H:%M:%S",
                         ),
                         "event_home_team": each["strHomeTeam"],
                         "event_away_team": each["strAwayTeam"],
+                        "event_thumb": each["strThumb"],
                     }
                 )
 
