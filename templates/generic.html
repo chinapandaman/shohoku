@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<!--
+	Broadcast by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Shohoku - Watch Live Events</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="{{url_for('static', filename='assets/css/main.css')}}" />
+	</head>
+	<body class="subpage">
+
+		<!-- Header -->
+			<header id="header">
+				<h1><a href="#">Shohoku <span>Events Stream</span></a></h1>
+<!--				<a href="#menu">Menu</a>-->
+			</header>
+
+		<!-- Nav -->
+<!--			<nav id="menu">-->
+<!--				<ul class="links">-->
+<!--					<li><a href="index.html">Home</a></li>-->
+<!--					<li><a href="generic.html">Generic</a></li>-->
+<!--					<li><a href="elements.html">Elements</a></li>-->
+<!--				</ul>-->
+<!--			</nav>-->
+
+		<!-- Main -->
+			<div id="main">
+
+			<!-- One -->
+				<section class="wrapper style1">
+					<div class="inner">
+						<header class="align-center">
+							<h2>{{event_title}}</h2>
+							<p>{{event_subtitle}}</p>
+						</header>
+						<div class="video">
+							<div class="video-wrapper">
+								<iframe width="560" height="315" src="{{event_link}}" frameborder="0" allowfullscreen></iframe>
+							</div>
+							<p class="caption">
+								{{event_description}}
+							</p>
+						</div>
+						<p>Shohoku does NOT host any of the live stream videos playing on this site. All videos are hosted on external streaming sites that are freely available online.</p>
+						<p>Please contact video hosting provider or media poster for take down or any DMCA complaints.</p>
+					</div>
+				</section>
+
+			<!-- Three -->
+				<section class="wrapper ">
+					<div class="inner">
+						<header class="align-center">
+							<h2>Explore</h2>
+							<p>Find out other events going on right now.</p>
+						</header>
+
+						<!-- 3 Column Video Section -->
+							<div class="flex flex-3">
+								{%for each in more_events:%}
+								<div class="video col">
+									<div class="image fit">
+										<img src="{{each['event_thumb']}}" alt="" />
+										<div class="arrow">
+											<div class="icon fa-play"></div>
+										</div>
+									</div>
+									<p class="caption">
+										{{each["event_title"]}}
+									</p>
+									<a href="{{url_for('generic', event_id=each['event_id'])}}" class="link"><span>Click Me</span></a>
+								</div>
+								{%endfor%}
+							</div>
+					</div>
+				</section>
+
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+<!--				<div class="inner">-->
+<!--					<div class="flex flex-3">-->
+<!--						<div class="col">-->
+<!--							<h3>Vestibullum</h3>-->
+<!--							<ul class="alt">-->
+<!--								<li><a href="#">Nascetur nunc varius commodo.</a></li>-->
+<!--								<li><a href="#">Vis id faucibus montes tempor</a></li>-->
+<!--								<li><a href="#">Massa amet lobortis vel.</a></li>-->
+<!--								<li><a href="#">Nascetur nunc varius commodo.</a></li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div class="col">-->
+<!--							<h3>Lobortis</h3>-->
+<!--							<ul class="alt">-->
+<!--								<li><a href="#">Nascetur nunc varius commodo.</a></li>-->
+<!--								<li><a href="#">Vis id faucibus montes tempor</a></li>-->
+<!--								<li><a href="#">Massa amet lobortis vel.</a></li>-->
+<!--								<li><a href="#">Nascetur nunc varius commodo.</a></li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--						<div class="col">-->
+<!--							<h3>Accumsan</h3>-->
+<!--							<ul class="alt">-->
+<!--								<li><a href="#">Nascetur nunc varius commodo.</a></li>-->
+<!--								<li><a href="#">Vis id faucibus montes tempor</a></li>-->
+<!--								<li><a href="#">Massa amet lobortis vel.</a></li>-->
+<!--								<li><a href="#">Nascetur nunc varius commodo.</a></li>-->
+<!--							</ul>-->
+<!--						</div>-->
+<!--					</div>-->
+<!--				</div>-->
+				<div class="copyright">
+<!--					<ul class="icons">-->
+<!--						<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>-->
+<!--						<li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>-->
+<!--						<li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>-->
+<!--						<li><a href="#" class="icon fa-snapchat"><span class="label">Snapchat</span></a></li>-->
+<!--					</ul>-->
+					Copyright &copy; 2020. Design: <a href="https://templated.co">TEMPLATED</a>.
+				</div>
+			</footer>
+
+		<!-- Scripts -->
+			<script src="{{url_for('static', filename='assets/js/jquery.min.js')}}"></script>
+			<script src="{{url_for('static', filename='assets/js/jquery.scrolly.min.js')}}"></script>
+			<script src="{{url_for('static', filename='assets/js/skel.min.js')}}"></script>
+			<script src="{{url_for('static', filename='assets/js/util.js')}}"></script>
+			<script src="{{url_for('static', filename='assets/js/main.js')}}"></script>
+
+	</body>
+</html>
