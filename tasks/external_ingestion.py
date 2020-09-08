@@ -16,10 +16,14 @@ class ExternalIngestion(object):
         )
 
         self.db.define_table(
-            "nba_events",
+            "nba_event",
+            Field("event_id", length=32),
+            Field("event_title", length=512),
+            Field("event_subtitle", length=512),
             Field("event_datetime", type="datetime"),
             Field("event_home_team", length=64),
             Field("event_away_team", length=64),
+            Field("event_description", type="text"),
         )
 
         self.event_id = 4387
@@ -36,17 +40,23 @@ class ExternalIngestion(object):
         if api_response.status_code == 200:
             events = json.loads(api_response.content)["events"]
 
-            db.nba_events.truncate()
+            db.nba_event.truncate()
 
             for each in events:
-                db.nba_events.insert(
+                db.nba_event.insert(
                     **{
+                        "event_id": each["idEvent"],
+                        "event_title": each["strEventAlternate"],
+                        "event_subtitle": "{} Season {}".format(
+                            each["strLeague"], each["strSeason"]
+                        ),
                         "event_datetime": datetime.datetime.strptime(
                             "{} {}".format(each["dateEvent"], each["strTime"]),
                             "%Y-%m-%d %H:%M:%S",
                         ),
                         "event_home_team": each["strHomeTeam"],
                         "event_away_team": each["strAwayTeam"],
+                        "event_description": each["strFilename"],
                     }
                 )
 

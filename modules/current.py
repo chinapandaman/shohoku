@@ -13,8 +13,12 @@ class Current(object):
         )
 
         self.db.define_table(
-            "nba_events",
+            "nba_event",
+            Field("event_id", length=32),
+            Field("event_title", length=512),
+            Field("event_subtitle", length=512),
             Field("event_datetime", type="datetime"),
             Field("event_home_team", length=64),
             Field("event_away_team", length=64),
+            Field("event_description", type="text"),
         )
