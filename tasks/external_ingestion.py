@@ -58,10 +58,7 @@ class ExternalIngestion(object):
                         "event_subtitle": "{} Season {}".format(
                             each["strLeague"], each["strSeason"]
                         ),
-                        "event_datetime": datetime.datetime.strptime(
-                            "{} {}".format(each["dateEvent"], each["strTime"]),
-                            "%Y-%m-%d %H:%M:%S",
-                        ),
+                        "event_datetime": event_datetime,
                         "event_home_team": each["strHomeTeam"],
                         "event_away_team": each["strAwayTeam"],
                         "event_description": each["strFilename"],
