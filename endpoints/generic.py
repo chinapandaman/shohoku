@@ -24,7 +24,7 @@ def generic(event_id):
         event_title=event["event_title"],
         event_subtitle=event["event_subtitle"],
         event_link="http://givemenbastreams.com/nba.php?g={}".format(
-            event["event_home_team"].lower()
+            event["event_home_team"].lower().split(" ")[-1]
         ),
         event_description=event["event_description"],
         more_events=[
