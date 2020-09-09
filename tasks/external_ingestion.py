@@ -43,6 +43,14 @@ class ExternalIngestion(object):
             db.nba_event.truncate()
 
             for each in events:
+                event_datetime = datetime.datetime.strptime(
+                    "{} {}".format(each["dateEvent"], each["strTime"]),
+                    "%Y-%m-%d %H:%M:%S",
+                )
+
+                if event_datetime < datetime.datetime.utcnow():
+                    continue
+
                 db.nba_event.insert(
                     **{
                         "event_id": each["idEvent"],
