@@ -43,6 +43,14 @@ class ExternalIngestion(object):
             db.nba_event.truncate()
 
             for each in events:
+                event_datetime = datetime.datetime.strptime(
+                    "{} {}".format(each["dateEvent"], each["strTime"]),
+                    "%Y-%m-%d %H:%M:%S",
+                )
+
+                if event_datetime < datetime.datetime.utcnow():
+                    continue
+
                 db.nba_event.insert(
                     **{
                         "event_id": each["idEvent"],
@@ -50,10 +58,7 @@ class ExternalIngestion(object):
                         "event_subtitle": "{} Season {}".format(
                             each["strLeague"], each["strSeason"]
                         ),
-                        "event_datetime": datetime.datetime.strptime(
-                            "{} {}".format(each["dateEvent"], each["strTime"]),
-                            "%Y-%m-%d %H:%M:%S",
-                        ),
+                        "event_datetime": event_datetime,
                         "event_home_team": each["strHomeTeam"],
                         "event_away_team": each["strAwayTeam"],
                         "event_description": each["strFilename"],
