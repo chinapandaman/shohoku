@@ -1,5 +1,6 @@
 black
 Flask
 isort
+pillow
 pyDAL
 requests

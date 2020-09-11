@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from app import app
-from flask import render_template
+from flask import render_template, url_for
 from modules.current import Current
 
 
@@ -19,14 +19,18 @@ def index():
             {
                 "event_id": each["event_id"],
                 "event_title": each["event_title"],
-                "event_thumb": "https://hhsvoyager.org/wp-content/uploads/2020/01/New-NBA-Logo-1.png",
+                "event_thumb": url_for(
+                    "static", filename="temp/{}.png".format(each["event_id"])
+                ),
             }
             for each in promoted_events
         ],
         nba_events=[
             {
                 "event_id": each["event_id"],
-                "event_thumb": "https://hhsvoyager.org/wp-content/uploads/2020/01/New-NBA-Logo-1.png",
+                "event_thumb": url_for(
+                    "static", filename="temp/{}.png".format(each["event_id"])
+                ),
             }
             for each in nba_events
         ],
