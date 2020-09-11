@@ -3,6 +3,7 @@
 import datetime
 import json
 import os
+from datetime import timedelta
 
 import requests
 from pydal import DAL, Field
@@ -49,6 +50,13 @@ class ExternalIngestion(object):
                 )
 
                 if event_datetime < datetime.datetime.utcnow():
+                    continue
+
+                next_day = (datetime.datetime.utcnow() + timedelta(days=1)).replace(
+                    hour=7, minute=0, second=0, microsecond=0
+                )
+
+                if event_datetime > next_day:
                     continue
 
                 db.nba_event.insert(
