@@ -44,7 +44,15 @@ class ExternalIngestion(object):
         )
         final_image.paste(away_image, (0, 0))
         final_image.paste(home_image, (away_image.width, 0))
-        final_image.save("../static/temp/{}.png".format(event_id))
+        final_image.save(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "static",
+                "temp",
+                "{}.png".format(event_id),
+            )
+        )
 
     def load_events(self):
         db = self.db
