@@ -4,8 +4,10 @@ import datetime
 import json
 import os
 from datetime import timedelta
+from io import BytesIO
 
 import requests
+from PIL import Image
 from pydal import DAL, Field
 
 
@@ -29,6 +31,21 @@ class ExternalIngestion(object):
 
         self.event_id = 4387
 
+    @staticmethod
+    def build_thumb(away_team_badge_url, home_team_badge_url, event_id):
+        away_response = requests.get(away_team_badge_url)
+        home_response = requests.get(home_team_badge_url)
+
+        away_image = Image.open(BytesIO(away_response.content))
+        home_image = Image.open(BytesIO(home_response.content))
+
+        final_image = Image.new(
+            "RGB", (away_image.width + home_image.width, away_image.height)
+        )
+        final_image.paste(away_image, (0, 0))
+        final_image.paste(home_image, (away_image.width, 0))
+        final_image.save("../static/temp/{}.png".format(event_id))
+
     def load_events(self):
         db = self.db
 
@@ -42,6 +59,14 @@ class ExternalIngestion(object):
             events = json.loads(api_response.content)["events"]
 
             db.nba_event.truncate()
+            for each in os.listdir(
+                os.path.join(os.path.dirname(__file__), "..", "static", "temp")
+            ):
+                os.remove(
+                    os.path.join(
+                        os.path.join(os.path.dirname(__file__), "..", "temp"), each
+                    )
+                )
 
             for each in events:
                 event_datetime = datetime.datetime.strptime(
@@ -58,6 +83,21 @@ class ExternalIngestion(object):
 
                 if event_datetime > next_day:
                     continue
+
+                team_api = (
+                    "https://www.thesportsdb.com/api/v1/json/1/lookupteam.php?id={}"
+                )
+
+                away_team_badge_url = json.loads(
+                    requests.get(team_api.format(each["idAwayTeam"])).content
+                )["teams"][0]["strTeamBadge"]
+                home_team_badge_url = json.loads(
+                    requests.get(team_api.format(each["idHomeTeam"])).content
+                )["teams"][0]["strTeamBadge"]
+
+                self.build_thumb(
+                    away_team_badge_url, home_team_badge_url, each["idEvent"]
+                )
 
                 db.nba_event.insert(
                     **{
