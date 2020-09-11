@@ -64,7 +64,8 @@ class ExternalIngestion(object):
             ):
                 os.remove(
                     os.path.join(
-                        os.path.join(os.path.dirname(__file__), "..", "temp"), each
+                        os.path.join(os.path.dirname(__file__), "..", "static", "temp"),
+                        each,
                     )
                 )
 
