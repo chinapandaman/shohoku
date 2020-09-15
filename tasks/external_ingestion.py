@@ -77,6 +77,10 @@ class ExternalIngestion(object):
                     )
                 )
 
+            if not events:
+                db.commit()
+                return
+
             for each in events:
                 event_datetime = datetime.datetime.strptime(
                     "{} {}".format(each["dateEvent"], each["strTime"]),
