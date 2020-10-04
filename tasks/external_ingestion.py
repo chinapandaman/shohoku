@@ -12,6 +12,9 @@ from pydal import DAL, Field
 
 
 class ExternalIngestion(object):
+    event_id = 4387
+    table = "nba_event"
+
     def __init__(self):
         self.db = DAL(
             "sqlite://../database/storage.sqlite",
@@ -19,7 +22,7 @@ class ExternalIngestion(object):
         )
 
         self.db.define_table(
-            "nba_event",
+            self.table,
             Field("event_id", length=32),
             Field("event_title", length=512),
             Field("event_subtitle", length=512),
@@ -29,10 +32,7 @@ class ExternalIngestion(object):
             Field("event_description", type="text"),
         )
 
-        self.event_id = 4387
-
-    @staticmethod
-    def build_thumb(away_team_badge_url, home_team_badge_url, event_id):
+    def build_thumb(self, away_team_badge_url, home_team_badge_url, event_id):
         away_response = requests.get(away_team_badge_url)
         home_response = requests.get(home_team_badge_url)
 
@@ -50,6 +50,7 @@ class ExternalIngestion(object):
                 "..",
                 "static",
                 "temp",
+                self.table,
                 "{}.png".format(event_id),
             )
         )
@@ -66,13 +67,21 @@ class ExternalIngestion(object):
         if api_response.status_code == 200:
             events = json.loads(api_response.content)["events"]
 
-            db.nba_event.truncate()
+            db[self.table].truncate()
             for each in os.listdir(
-                os.path.join(os.path.dirname(__file__), "..", "static", "temp")
+                os.path.join(
+                    os.path.dirname(__file__), "..", "static", "temp", self.table
+                )
             ):
                 os.remove(
                     os.path.join(
-                        os.path.join(os.path.dirname(__file__), "..", "static", "temp"),
+                        os.path.join(
+                            os.path.dirname(__file__),
+                            "..",
+                            "static",
+                            "temp",
+                            self.table,
+                        ),
                         each,
                     )
                 )
@@ -112,7 +121,7 @@ class ExternalIngestion(object):
                     away_team_badge_url, home_team_badge_url, each["idEvent"]
                 )
 
-                db.nba_event.insert(
+                db[self.table].insert(
                     **{
                         "event_id": each["idEvent"],
                         "event_title": each["strEventAlternate"],
@@ -129,5 +138,11 @@ class ExternalIngestion(object):
         db.commit()
 
 
+class NFLIngestion(ExternalIngestion):
+    event_id = 4391
+    table = "nfl_event"
+
+
 if __name__ == "__main__":
     ExternalIngestion().load_events()
+    NFLIngestion().load_events()

@@ -62,7 +62,7 @@
                     <div class="flex flex-tabs">
                         <ul class="tab-list">
                             <li><a href="#" data-tab="tab-1" class="active">NBA</a></li>
-<!--                                    <li><a href="#" data-tab="tab-2">Quam tempus sodales ipsum</a></li>-->
+                            <li><a href="#" data-tab="tab-2">NFL</a></li>
 <!--                                    <li><a href="#" data-tab="tab-3">Donec faucibus risus cursus</a></li>-->
                         </ul>
                         <div class="tabs">
@@ -84,68 +84,20 @@
                                 </div>
 
                             <!-- Tab 2 -->
-<!--                                        <div class="tab tab-2 flex flex-3">-->
-<!--                                            &lt;!&ndash; Video Thumbnail &ndash;&gt;-->
-<!--                                                <div class="video col">-->
-<!--                                                    <div class="image fit">-->
-<!--                                                        <img src="images/pic06.jpg" alt="" />-->
-<!--                                                        <div class="arrow">-->
-<!--                                                            <div class="icon fa-play"></div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <a href="generic.html" class="link"><span>Click Me</span></a>-->
-<!--                                                </div>-->
-<!--                                            &lt;!&ndash; Video Thumbnail &ndash;&gt;-->
-<!--                                                <div class="video col">-->
-<!--                                                    <div class="image fit">-->
-<!--                                                        <img src="images/pic05.jpg" alt="" />-->
-<!--                                                        <div class="arrow">-->
-<!--                                                            <div class="icon fa-play"></div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <a href="generic.html" class="link"><span>Click Me</span></a>-->
-<!--                                                </div>-->
-<!--                                            &lt;!&ndash; Video Thumbnail &ndash;&gt;-->
-<!--                                                <div class="video col">-->
-<!--                                                    <div class="image fit">-->
-<!--                                                        <img src="images/pic04.jpg" alt="" />-->
-<!--                                                        <div class="arrow">-->
-<!--                                                            <div class="icon fa-play"></div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <a href="generic.html" class="link"><span>Click Me</span></a>-->
-<!--                                                </div>-->
-<!--                                            &lt;!&ndash; Video Thumbnail &ndash;&gt;-->
-<!--                                                <div class="video col">-->
-<!--                                                    <div class="image fit">-->
-<!--                                                        <img src="images/pic03.jpg" alt="" />-->
-<!--                                                        <div class="arrow">-->
-<!--                                                            <div class="icon fa-play"></div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <a href="generic.html" class="link"><span>Click Me</span></a>-->
-<!--                                                </div>-->
-<!--                                            &lt;!&ndash; Video Thumbnail &ndash;&gt;-->
-<!--                                                <div class="video col">-->
-<!--                                                    <div class="image fit">-->
-<!--                                                        <img src="images/pic02.jpg" alt="" />-->
-<!--                                                        <div class="arrow">-->
-<!--                                                            <div class="icon fa-play"></div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <a href="generic.html" class="link"><span>Click Me</span></a>-->
-<!--                                                </div>-->
-<!--                                            &lt;!&ndash; Video Thumbnail &ndash;&gt;-->
-<!--                                                <div class="video col">-->
-<!--                                                    <div class="image fit">-->
-<!--                                                        <img src="images/pic01.jpg" alt="" />-->
-<!--                                                        <div class="arrow">-->
-<!--                                                            <div class="icon fa-play"></div>-->
-<!--                                                        </div>-->
-<!--                                                    </div>-->
-<!--                                                    <a href="generic.html" class="link"><span>Click Me</span></a>-->
-<!--                                                </div>-->
-<!--                                        </div>-->
+                                <div class="tab tab-2 flex flex-3">
+                                    <!-- Video Thumbnail -->
+                                        {%for each in nfl_events:%}
+                                        <div class="video col">
+                                            <div class="image fit">
+                                                <img src="{{each['event_thumb']}}" alt="" />
+                                                <div class="arrow">
+                                                    <div class="icon fa-play"></div>
+                                                </div>
+                                            </div>
+                                            <a href="{{url_for('generic', event_id=each['event_id'])}}" class="link"><span>Click Me</span></a>
+                                        </div>
+                                        {%endfor%}
+                                </div>
 
                             <!-- Tab 3 -->
 <!--                                        <div class="tab tab-3 flex flex-3">-->
