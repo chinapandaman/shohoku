@@ -9,9 +9,26 @@ from modules.current import Current
 def generic(event_id):
     db = Current().db
 
-    event = db(db.nba_event.event_id == event_id).select().first()
+    nba_event = db(db.nba_event.event_id == event_id).select().first()
+    nfl_event = db(db.nfl_event.event_id == event_id).select().first()
 
-    more_events = db(db.nba_event.event_id != event_id).select()
+    external_link = "http://givemenbastreams.com/nba.php?g={}"
+
+    if nfl_event:
+        external_link = "https://nflwebcast.com/verses/{}.html"
+
+    event = nba_event or nfl_event
+
+    more_nba_events = db(db.nba_event.event_id != event_id).select().as_list()
+    more_nfl_events = db(db.nfl_event.event_id != event_id).select().as_list()
+
+    for each in more_nba_events:
+        each["event_type"] = "nba_event"
+
+    for each in more_nfl_events:
+        each["event_type"] = "nfl_event"
+
+    more_events = more_nba_events + more_nfl_events
 
     if len(more_events) > 3:
         more_events = more_events[:3]
@@ -23,7 +40,7 @@ def generic(event_id):
         "generic.html",
         event_title=event["event_title"],
         event_subtitle=event["event_subtitle"],
-        event_link="http://givemenbastreams.com/nba.php?g={}".format(
+        event_link=external_link.format(
             event["event_home_team"].lower().split(" ")[-1]
         ),
         event_description=event["event_description"],
@@ -32,7 +49,10 @@ def generic(event_id):
                 "event_id": each["event_id"],
                 "event_title": each["event_title"],
                 "event_thumb": url_for(
-                    "static", filename="temp/{}.png".format(each["event_id"])
+                    "static",
+                    filename="temp/{}/{}.png".format(
+                        each["event_type"], each["event_id"]
+                    ),
                 ),
             }
             for each in more_events
