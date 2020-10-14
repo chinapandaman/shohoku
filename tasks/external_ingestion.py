@@ -143,6 +143,12 @@ class NFLIngestion(ExternalIngestion):
     table = "nfl_event"
 
 
+class MLBIngestion(ExternalIngestion):
+    event_id = 4424
+    table = "mlb_event"
+
+
 if __name__ == "__main__":
     ExternalIngestion().load_events()
     NFLIngestion().load_events()
+    MLBIngestion().load_events()
