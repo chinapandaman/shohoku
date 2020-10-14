@@ -12,8 +12,8 @@ from pydal import DAL, Field
 
 
 class ExternalIngestion(object):
-    event_id = 4387
-    table = "nba_event"
+    event_id = None
+    table = None
 
     def __init__(self):
         self.db = DAL(
@@ -138,6 +138,11 @@ class ExternalIngestion(object):
         db.commit()
 
 
+class NBAIngestion(ExternalIngestion):
+    event_id = 4387
+    table = "nba_event"
+
+
 class NFLIngestion(ExternalIngestion):
     event_id = 4391
     table = "nfl_event"
@@ -149,6 +154,6 @@ class MLBIngestion(ExternalIngestion):
 
 
 if __name__ == "__main__":
-    ExternalIngestion().load_events()
+    NBAIngestion().load_events()
     NFLIngestion().load_events()
     MLBIngestion().load_events()
