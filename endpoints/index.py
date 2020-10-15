@@ -1,38 +1,20 @@
 # -*- coding: utf-8 -*-
 
 
-import random
-
 from app import app
 from flask import render_template, url_for
-from modules.current import Current
+from modules.common import Common
 
 
 @app.route("/")
 def index():
-    db = Current().db
+    common = Common()
+    events_by_type = common.get_events_grouped_by_type()
 
-    nba_events = db(db.nba_event.id > 0).select().as_list()
-    nfl_events = db(db.nfl_event.id > 0).select().as_list()
-    mlb_events = db(db.mlb_event.id > 0).select().as_list()
-
-    for each in nba_events:
-        each["event_type"] = "nba_event"
-
-    for each in nfl_events:
-        each["event_type"] = "nfl_event"
-
-    for each in mlb_events:
-        each["event_type"] = "mlb_event"
-
-    event_list = nba_events + nfl_events + mlb_events
-
-    promoted_events = (
-        random.sample(event_list, 2) if len(event_list) > 2 else event_list
-    )
-    nba_events_shown = nba_events if len(nba_events) <= 6 else nba_events[:6]
-    nfl_events_shown = nfl_events if len(nfl_events) <= 6 else nfl_events[:6]
-    mlb_events_shown = mlb_events if len(mlb_events) <= 6 else mlb_events[:6]
+    promoted_events = common.get_promoted_events()
+    nba_events_shown = events_by_type["nba_event"]
+    nfl_events_shown = events_by_type["nfl_event"]
+    mlb_events_shown = events_by_type["mlb_event"]
 
     return render_template(
         "index.html",

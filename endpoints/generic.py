@@ -2,44 +2,16 @@
 
 from app import app
 from flask import abort, render_template, url_for
-from modules.current import Current
+from modules.common import Common
 
 
 @app.route("/generic/<event_id>")
 def generic(event_id):
-    db = Current().db
+    common = Common()
 
-    nba_event = db(db.nba_event.event_id == event_id).select().first()
-    nfl_event = db(db.nfl_event.event_id == event_id).select().first()
-    mlb_event = db(db.mlb_event.event_id == event_id).select().first()
+    event = common.get_event_by_event_id(event_id)
 
-    external_link = "http://givemenbastreams.com/nba.php?g={}"
-
-    if nfl_event:
-        external_link = "https://nflwebcast.com/verses/{}.html"
-
-    if mlb_event:
-        external_link = "http://givemenbastreams.com/mlb.php?g={}"
-
-    event = nba_event or nfl_event or mlb_event
-
-    more_nba_events = db(db.nba_event.event_id != event_id).select().as_list()
-    more_nfl_events = db(db.nfl_event.event_id != event_id).select().as_list()
-    more_mlb_events = db(db.mlb_event.event_id != event_id).select().as_list()
-
-    for each in more_nba_events:
-        each["event_type"] = "nba_event"
-
-    for each in more_nfl_events:
-        each["event_type"] = "nfl_event"
-
-    for each in more_mlb_events:
-        each["event_type"] = "mlb_event"
-
-    more_events = more_nba_events + more_nfl_events + more_mlb_events
-
-    if len(more_events) > 3:
-        more_events = more_events[:3]
+    more_events = common.get_event_other_than_event_id(event_id)
 
     if not event:
         abort(404)
@@ -48,7 +20,7 @@ def generic(event_id):
         "generic.html",
         event_title=event["event_title"],
         event_subtitle=event["event_subtitle"],
-        event_link=external_link.format(
+        event_link=event["event_external_link"].format(
             event["event_home_team"].lower().split(" ")[-1]
         ),
         event_description=event["event_description"],
