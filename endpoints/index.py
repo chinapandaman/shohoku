@@ -12,9 +12,31 @@ def index():
     events_by_type = common.get_events_grouped_by_type()
 
     promoted_events = common.get_promoted_events()
-    nba_events_shown = events_by_type["nba_event"]
-    nfl_events_shown = events_by_type["nfl_event"]
-    mlb_events_shown = events_by_type["mlb_event"]
+
+    results = []
+
+    for event_type, events in events_by_type.items():
+        result_body = {
+            "type": event_type,
+            "is_active": False,
+            "display_name": event_type.split("_")[0].upper(),
+            "events": [
+                {
+                    "event_id": event["event_id"],
+                    "event_title": event["event_title"],
+                    "event_thumb": url_for(
+                        "static",
+                        filename="temp/{}/{}.png".format(
+                            event["event_type"], event["event_id"]
+                        ),
+                    ),
+                }
+                for event in events
+            ],
+        }
+        results.append(result_body)
+
+    results[0]["is_active"] = True
 
     return render_template(
         "index.html",
@@ -31,40 +53,5 @@ def index():
             }
             for each in promoted_events
         ],
-        nba_events=[
-            {
-                "event_id": each["event_id"],
-                "event_thumb": url_for(
-                    "static",
-                    filename="temp/{}/{}.png".format(
-                        each["event_type"], each["event_id"]
-                    ),
-                ),
-            }
-            for each in nba_events_shown
-        ],
-        nfl_events=[
-            {
-                "event_id": each["event_id"],
-                "event_thumb": url_for(
-                    "static",
-                    filename="temp/{}/{}.png".format(
-                        each["event_type"], each["event_id"]
-                    ),
-                ),
-            }
-            for each in nfl_events_shown
-        ],
-        mlb_events=[
-            {
-                "event_id": each["event_id"],
-                "event_thumb": url_for(
-                    "static",
-                    filename="temp/{}/{}.png".format(
-                        each["event_type"], each["event_id"]
-                    ),
-                ),
-            }
-            for each in mlb_events_shown
-        ],
+        results=results,
     )

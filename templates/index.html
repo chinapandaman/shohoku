@@ -61,16 +61,16 @@
                 <!-- Tabbed Video Section -->
                     <div class="flex flex-tabs">
                         <ul class="tab-list">
-                            <li><a href="#" data-tab="tab-1" class="active">NBA</a></li>
-                            <li><a href="#" data-tab="tab-2">NFL</a></li>
-                            <li><a href="#" data-tab="tab-3">MLB</a></li>
+                            {% for event_type in results: %}
+                            <li><a href="#" data-tab="{{event_type['type']}}" class="{{'active' if event_type['is_active'] else ''}}">{{event_type["display_name"]}}</a></li>
+                            {% endfor %}
                         </ul>
                         <div class="tabs">
-
-                            <!-- Tab 1 -->
-                                <div class="tab tab-1 flex flex-3 active">
+                            {% for event_type in results: %}
+                            <!-- Tabs -->
+                                <div class="tab {{event_type['type']}} flex flex-3 {{'active' if event_type['is_active'] else ''}}">
                                     <!-- Video Thumbnail -->
-                                        {%for each in nba_events:%}
+                                        {%for each in event_type["events"]:%}
                                         <div class="video col">
                                             <div class="image fit">
                                                 <img src="{{each['event_thumb']}}" alt="" />
@@ -82,39 +82,7 @@
                                         </div>
                                         {%endfor%}
                                 </div>
-
-                            <!-- Tab 2 -->
-                                <div class="tab tab-2 flex flex-3">
-                                    <!-- Video Thumbnail -->
-                                        {%for each in nfl_events:%}
-                                        <div class="video col">
-                                            <div class="image fit">
-                                                <img src="{{each['event_thumb']}}" alt="" />
-                                                <div class="arrow">
-                                                    <div class="icon fa-play"></div>
-                                                </div>
-                                            </div>
-                                            <a href="{{url_for('generic', event_id=each['event_id'])}}" class="link"><span>Click Me</span></a>
-                                        </div>
-                                        {%endfor%}
-                                </div>
-
-                            <!-- Tab 3 -->
-                                <div class="tab tab-3 flex flex-3">
-                                    <!-- Video Thumbnail -->
-                                        {%for each in mlb_events:%}
-                                        <div class="video col">
-                                            <div class="image fit">
-                                                <img src="{{each['event_thumb']}}" alt="" />
-                                                <div class="arrow">
-                                                    <div class="icon fa-play"></div>
-                                                </div>
-                                            </div>
-                                            <a href="{{url_for('generic', event_id=each['event_id'])}}" class="link"><span>Click Me</span></a>
-                                        </div>
-                                        {%endfor%}
-                                </div>
-
+                            {% endfor %}
                         </div>
                     </div>
             </div>
